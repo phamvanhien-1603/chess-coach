@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Be Vietnam Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #eef3f9;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  html[data-theme="dark"] body {
+    background-color: #070b14;
+    color: #f1f5f9;
+  }
+}
+
+/* Dark mode surface overrides for main workspace & cards */
+html[data-theme="dark"] .app-shell {
+  background-color: #070b14 !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .app-header {
+  background-color: rgba(11, 16, 27, 0.92) !important;
+  border-color: rgba(30, 41, 59, 0.85) !important;
+}
+
+html[data-theme="dark"] .app-main .bg-white,
+html[data-theme="dark"] .app-header .bg-white {
+  background-color: #0f172a !important;
+}
+
+html[data-theme="dark"] .app-main .bg-slate-50,
+html[data-theme="dark"] .app-main .bg-slate-100,
+html[data-theme="dark"] .app-header .bg-slate-100 {
+  background-color: #162033 !important;
+}
+
+html[data-theme="dark"] .app-main .bg-emerald-50\/70 {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+html[data-theme="dark"] .app-main .border-slate-200,
+html[data-theme="dark"] .app-main .border-slate-200\/90,
+html[data-theme="dark"] .app-main .border-slate-200\/80,
+html[data-theme="dark"] .app-header .border-slate-200,
+html[data-theme="dark"] .app-header .border-slate-200\/80 {
+  border-color: #1e293b !important;
+}
+
+html[data-theme="dark"] .app-main .text-slate-900,
+html[data-theme="dark"] .app-main .text-slate-800,
+html[data-theme="dark"] .app-header .text-slate-900 {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .app-main .text-slate-700,
+html[data-theme="dark"] .app-main .text-slate-600,
+html[data-theme="dark"] .app-header .text-slate-700,
+html[data-theme="dark"] .app-header .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .app-main .text-slate-500,
+html[data-theme="dark"] .app-header .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+/* Light mode synchronization for all Modals inside .app-shell */
+html:not([data-theme="dark"]) .app-shell > .fixed .bg-slate-900,
+html:not([data-theme="dark"]) .app-shell > .fixed .bg-slate-900\/95 {
+  background-color: #ffffff !important;
+}
+
+html:not([data-theme="dark"]) .app-shell > .fixed .bg-slate-950,
+html:not([data-theme="dark"]) .app-shell > .fixed .bg-slate-950\/70,
+html:not([data-theme="dark"]) .app-shell > .fixed .bg-slate-950\/60,
+html:not([data-theme="dark"]) .app-shell > .fixed .bg-slate-800,
+html:not([data-theme="dark"]) .app-shell > .fixed .bg-slate-800\/60,
+html:not([data-theme="dark"]) .app-shell > .fixed .bg-slate-800\/50,
+html:not([data-theme="dark"]) .app-shell > .fixed .bg-slate-800\/45,
+html:not([data-theme="dark"]) .app-shell > .fixed .bg-slate-800\/40 {
+  background-color: #f1f5f9 !important;
+}
+
+html:not([data-theme="dark"]) .app-shell > .fixed .border-slate-800,
+html:not([data-theme="dark"]) .app-shell > .fixed .border-slate-700,
+html:not([data-theme="dark"]) .app-shell > .fixed .border-slate-700\/80,
+html:not([data-theme="dark"]) .app-shell > .fixed .border-slate-700\/70,
+html:not([data-theme="dark"]) .app-shell > .fixed .border-slate-700\/60 {
+  border-color: #e2e8f0 !important;
+}
+
+html:not([data-theme="dark"]) .app-shell > .fixed .text-slate-100,
+html:not([data-theme="dark"]) .app-shell > .fixed .text-slate-200 {
+  color: #0f172a !important;
+}
+
+html:not([data-theme="dark"]) .app-shell > .fixed .text-slate-300,
+html:not([data-theme="dark"]) .app-shell > .fixed .text-slate-400 {
+  color: #475569 !important;
+}
+
+/* Custom subtle scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(226, 232, 240, 0.5);
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.6);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
+}
