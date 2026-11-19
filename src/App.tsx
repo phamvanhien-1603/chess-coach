@@ -1267,10 +1267,10 @@ export function App() {
             </button>
             <div>
               <h1 className="text-sm sm:text-base font-extrabold text-slate-900 leading-none">
-                Cờ Vua AI Coach
+                {t('appTitle')}
               </h1>
               <p className="text-[11px] text-slate-500 mt-0.5 hidden sm:block">
-                Học cờ thông minh • Nâng cao kỹ năng
+                {t('appSubtitle')}
               </p>
             </div>
           </div>
@@ -1525,11 +1525,11 @@ export function App() {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-semibold text-amber-600 transition cursor-pointer"
               >
                 <Save className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Lưu</span>
+                <span className="hidden sm:inline">{t('saveShort')}</span>
               </button>
               <button
                 onClick={toggleFullscreen}
-                title="Toàn màn hình"
+                title={t('fullscreen')}
                 className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 transition cursor-pointer"
               >
                 <Maximize2 className="w-4 h-4" />
@@ -1570,14 +1570,14 @@ export function App() {
                     onClick={() => handleModeChange(mode)}
                     className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold cursor-pointer"
                   >
-                    Chơi lại
+                    {t('playAgain')}
                   </button>
                 </div>
                 {moves.length > 0 && (
                   <div className="flex items-center gap-4 text-[11px] font-semibold text-slate-600 pt-1 border-t border-emerald-500/20">
-                    <span>Độ chính xác (Accuracy):</span>
-                    <span className="text-slate-900">♔ Trắng: <strong className="text-emerald-600">{wAcc}%</strong></span>
-                    <span className="text-slate-900">♚ Đen: <strong className="text-blue-600">{bAcc}%</strong></span>
+                    <span>{t('accuracyLabel')}</span>
+                    <span className="text-slate-900">♔ {t('turnWhite')}: <strong className="text-emerald-600">{wAcc}%</strong></span>
+                    <span className="text-slate-900">♚ {t('turnBlack')}: <strong className="text-blue-600">{bAcc}%</strong></span>
                   </div>
                 )}
               </div>
@@ -1683,7 +1683,7 @@ export function App() {
                   onClick={() => setPlayScreen('lobby')}
                   className="text-blue-600 hover:text-blue-700 font-bold cursor-pointer"
                 >
-                  ← Quay lại Sảnh chơi
+                  {t('backToLobby')}
                 </button>
                 <div className="flex items-center gap-2 font-mono font-bold">
                   {isSelfPlay && (
@@ -1696,7 +1696,7 @@ export function App() {
                           : 'bg-slate-100 border-slate-200 text-slate-600'
                       }`}
                     >
-                      {autoFlipSelfPlay ? 'Tự xoay: Bật' : 'Tự xoay: Tắt'}
+                      {autoFlipSelfPlay ? t('autoFlipOn') : t('autoFlipOff')}
                     </button>
                   )}
                   {isCoachMode && (
@@ -1888,7 +1888,7 @@ export function App() {
             className="fixed top-3 left-3 z-50 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/85 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-100 backdrop-blur-sm shadow-lg transition cursor-pointer"
           >
             <Minimize2 className="w-4 h-4 text-emerald-400" />
-            <span>Thoát toàn màn hình</span>
+            <span>{t('exitFullscreen')}</span>
           </button>
 
           <div className={is3D ? 'w-full h-full' : 'w-[min(94vh,94vw)] aspect-square'}>

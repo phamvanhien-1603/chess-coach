@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { dbApi, type AuthUser, type FriendRelationItem, type PrivateRoomInfo, type TournamentItem } from '../services/dbApi';
 import type { PlayerColor, SkillLevelOption } from '../types/chess';
+import { useI18n } from '../i18n/I18nContext';
 
 export interface TimeControlOption {
   id: string;
@@ -151,18 +152,19 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
 }) => {
   const [tcOpen, setTcOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const { t } = useI18n();
 
-  const currentTc = TIME_CONTROLS.find((t) => t.label === selectedTimeControl) || TIME_CONTROLS[0];
+  const currentTc = TIME_CONTROLS.find((tc) => tc.label === selectedTimeControl) || TIME_CONTROLS[0];
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-200/90 shadow-xs p-5 space-y-4 shadow-xl">
+    <div className="rounded-2xl bg-white border border-slate-200/90 shadow-xs p-5 space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-bold text-slate-900">Sảnh Chơi Cờ</h2>
-          <p className="text-xs text-slate-500">Chọn thời gian và chế độ thi đấu yêu thích</p>
+          <h2 className="text-base font-bold text-slate-900">{t('lobbyTitle')}</h2>
+          <p className="text-xs text-slate-500">{t('lobbySub')}</p>
         </div>
         <span className="px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-semibold text-emerald-700">
-          Trực tuyến
+          {t('onlineBadge')}
         </span>
       </div>
 
@@ -222,19 +224,19 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
             <Loader2 className="w-5 h-5 text-emerald-600 animate-spin shrink-0" />
             <div>
               <div className="text-sm font-bold text-emerald-800">
-                Đang tìm đối thủ ({selectedTimeControl})...
+                {t('searchingOpponent')} ({selectedTimeControl})...
               </div>
               <div className="text-[11px] text-emerald-700/80">
-                Đang kết nối máy chủ ghép trận theo mức ELO của bạn
+                {t('searchingSub')}
               </div>
             </div>
           </div>
           <button
             type="button"
             onClick={onCancelMatchmaking}
-            className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-rose-500/20 border border-slate-700 hover:border-rose-500/40 text-xs font-semibold text-slate-700 hover:text-rose-300 cursor-pointer"
+            className="px-3 py-1.5 rounded-lg bg-white hover:bg-rose-500/20 border border-slate-200 hover:border-rose-500/40 text-xs font-semibold text-slate-700 hover:text-rose-600 cursor-pointer"
           >
-            Hủy
+            {t('cancel')}
           </button>
         </div>
       ) : (
@@ -244,7 +246,7 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
           className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition cursor-pointer"
         >
           <Play className="w-4 h-4 fill-current" />
-          <span>Bắt đầu ván cờ ({selectedTimeControl})</span>
+          <span>{t('startMatchBtn')} ({selectedTimeControl})</span>
         </button>
       )}
 
@@ -260,8 +262,8 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
             <Trophy className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-slate-900">Các giải đấu</div>
-            <div className="text-[11px] text-slate-500">Arena & Swiss nhận Xu</div>
+            <div className="text-xs font-bold text-slate-900">{t('tournamentsTitle')}</div>
+            <div className="text-[11px] text-slate-500">{t('tournamentsSub')}</div>
           </div>
         </button>
 
@@ -275,8 +277,8 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
             <Users className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-slate-900">Chơi với một người bạn</div>
-            <div className="text-[11px] text-slate-500">Tạo phòng & gửi link mời</div>
+            <div className="text-xs font-bold text-slate-900">{t('playFriendTitle')}</div>
+            <div className="text-[11px] text-slate-500">{t('playFriendSub')}</div>
           </div>
         </button>
 
@@ -290,8 +292,8 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
             <Bot className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-slate-900">Chơi với Bot</div>
-            <div className="text-[11px] text-slate-500">Chọn ELO 250 → 2500</div>
+            <div className="text-xs font-bold text-slate-900">{t('playBotTitle')}</div>
+            <div className="text-[11px] text-slate-500">{t('playBotSub')}</div>
           </div>
         </button>
 
@@ -305,8 +307,8 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
             <GraduationCap className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-slate-900">Bật huấn luyện viên</div>
-            <div className="text-[11px] text-slate-500">Gợi ý, cảnh báo sai lầm</div>
+            <div className="text-xs font-bold text-slate-900">{t('coachModeTitle')}</div>
+            <div className="text-[11px] text-slate-500">{t('coachModeSub')}</div>
           </div>
         </button>
 
@@ -321,14 +323,12 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
               <Zap className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-900">Tự chơi (Pass &amp; Play)</div>
-              <div className="text-[11px] text-slate-500">
-                Tự điều khiển cả quân Trắng &amp; quân Đen trên cùng bàn cờ (hoặc đấu 2 người trực tiếp)
-              </div>
+              <div className="text-xs font-bold text-slate-900">{t('selfPlayTitle')}</div>
+              <div className="text-[11px] text-slate-500">{t('selfPlaySub')}</div>
             </div>
           </div>
-          <span className="px-2 py-0.5 rounded bg-teal-500/15 text-teal-300 text-[10px] font-bold shrink-0">
-            2 bên
+          <span className="px-2 py-0.5 rounded bg-teal-500/15 text-teal-600 text-[10px] font-bold shrink-0">
+            {t('twoSidesBadge')}
           </span>
         </button>
       </div>
@@ -341,7 +341,7 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
           onClick={() => setIsExpanded((e) => !e)}
           className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-100/80 hover:bg-slate-200/70 border border-slate-200 text-xs font-semibold text-slate-600 transition cursor-pointer disabled:opacity-45"
         >
-          <span>{isExpanded ? 'Thu gọn' : 'Thêm nữa'}</span>
+          <span>{isExpanded ? t('lessBtn') : t('moreBtn')}</span>
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
 
@@ -355,8 +355,8 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
             >
               <Zap className="w-4 h-4 text-amber-400 shrink-0" />
               <div>
-                <div className="text-xs font-semibold text-slate-700">Cờ biến thể 960</div>
-                <div className="text-[10px] text-slate-500">Xếp quân ngẫu nhiên</div>
+                <div className="text-xs font-semibold text-slate-700">{t('chess960Title')}</div>
+                <div className="text-[10px] text-slate-500">{t('chess960Sub')}</div>
               </div>
             </button>
             <button
@@ -367,8 +367,8 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
             >
               <Calendar className="w-4 h-4 text-sky-400 shrink-0" />
               <div>
-                <div className="text-xs font-semibold text-slate-700">Cờ hàng ngày</div>
-                <div className="text-[10px] text-slate-500">Nhịp chậm 30 phút</div>
+                <div className="text-xs font-semibold text-slate-700">{t('dailyChessTitle')}</div>
+                <div className="text-[10px] text-slate-500">{t('dailyChessSub')}</div>
               </div>
             </button>
             <button
@@ -379,8 +379,8 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
             >
               <Puzzle className="w-4 h-4 text-emerald-600 shrink-0" />
               <div>
-                <div className="text-xs font-semibold text-slate-700">Giải thế cờ</div>
-                <div className="text-[10px] text-slate-500">Luyện chiến thuật</div>
+                <div className="text-xs font-semibold text-slate-700">{t('puzzlesExtraTitle')}</div>
+                <div className="text-[10px] text-slate-500">{t('puzzlesExtraSub')}</div>
               </div>
             </button>
             <button
@@ -391,8 +391,8 @@ export const PlayLobbyScreen: React.FC<PlayLobbyProps> = ({
             >
               <LineChart className="w-4 h-4 text-purple-400 shrink-0" />
               <div>
-                <div className="text-xs font-semibold text-slate-700">Bàn phân tích</div>
-                <div className="text-[10px] text-slate-500">Nhập FEN / PGN</div>
+                <div className="text-xs font-semibold text-slate-700">{t('analyzeExtraTitle')}</div>
+                <div className="text-[10px] text-slate-500">{t('analyzeExtraSub')}</div>
               </div>
             </button>
           </div>
@@ -414,8 +414,10 @@ export const TournamentListScreen: React.FC<TournamentListScreenProps> = ({
   loading,
   onJoin,
   onBack,
-}) => (
-  <div className="rounded-2xl bg-white border border-slate-200/90 shadow-xs p-5 space-y-4 shadow-xl">
+}) => {
+  const { t } = useI18n();
+  return (
+  <div className="rounded-2xl bg-white border border-slate-200/90 shadow-xs p-5 space-y-4">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2.5">
         <button
@@ -425,8 +427,8 @@ export const TournamentListScreen: React.FC<TournamentListScreenProps> = ({
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div>
-          <h2 className="text-sm font-bold text-slate-900">Các Giải Đấu Đang Mở</h2>
-          <p className="text-[11px] text-slate-500">Tham gia thi đấu để nhận Xu thưởng & Điểm xếp hạng</p>
+          <h2 className="text-sm font-bold text-slate-900">{t('tournamentsHeader')}</h2>
+          <p className="text-[11px] text-slate-500">{t('tournamentsHeaderSub')}</p>
         </div>
       </div>
       <Trophy className="w-5 h-5 text-amber-400" />
@@ -438,38 +440,39 @@ export const TournamentListScreen: React.FC<TournamentListScreenProps> = ({
       </div>
     ) : (
       <div className="space-y-2.5">
-        {tournaments.map((t) => (
+        {tournaments.map((tour) => (
           <div
-            key={t.id}
+            key={tour.id}
             className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3"
           >
             <div className="min-w-0">
-              <div className="text-xs font-bold text-slate-900 truncate">{t.name}</div>
+              <div className="text-xs font-bold text-slate-900 truncate">{tour.name}</div>
               <div className="text-[11px] text-slate-500 mt-0.5">
-                {t.timeControl} · {t.format} · {t.playersCount}/{t.maxPlayers} kỳ thủ
+                {tour.timeControl} · {tour.format} · {tour.playersCount}/{tour.maxPlayers}
               </div>
               <div className="mt-1 inline-flex items-center gap-2 text-[10px] font-semibold">
-                <span className="text-amber-700">Giải thưởng: {t.prizeCoins} Xu</span>
-                <span className="text-emerald-600">· {t.status}</span>
+                <span className="text-amber-700">{tour.prizeCoins} {t('coinsUnit')}</span>
+                <span className="text-emerald-600">· {tour.status}</span>
               </div>
             </div>
             <button
-              onClick={() => onJoin(t.id)}
-              disabled={t.joined}
+              onClick={() => onJoin(tour.id)}
+              disabled={tour.joined}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 cursor-pointer ${
-                t.joined
+                tour.joined
                   ? 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-700 cursor-default'
                   : 'bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold'
               }`}
             >
-              {t.joined ? 'Đã đăng ký' : 'Tham gia'}
+              {tour.joined ? t('joinedBtn') : t('joinBtn')}
             </button>
           </div>
         ))}
       </div>
     )}
   </div>
-);
+  );
+};
 
 interface FriendLobbyScreenProps {
   selectedTimeControl: string;
@@ -615,9 +618,10 @@ export const BotSelectionScreen: React.FC<BotSelectionScreenProps> = ({
 }) => {
   const [selectedBot, setSelectedBot] = useState<BotProfile>(BOT_PROFILES[2]);
   const [color, setColor] = useState<PlayerColor>('w');
+  const { t } = useI18n();
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-200/90 shadow-xs p-5 space-y-4 shadow-xl">
+    <div className="rounded-2xl bg-white border border-slate-200/90 shadow-xs p-5 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <button
@@ -627,8 +631,8 @@ export const BotSelectionScreen: React.FC<BotSelectionScreenProps> = ({
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
-            <h2 className="text-sm font-bold text-slate-900">Chọn Bot Thi Đấu (PvE)</h2>
-            <p className="text-[11px] text-slate-500">Từ ELO 250 đến 2500 với tính cách riêng</p>
+            <h2 className="text-sm font-bold text-slate-900">{t('botSelectHeader')}</h2>
+            <p className="text-[11px] text-slate-500">{t('botSelectSub')}</p>
           </div>
         </div>
         <Bot className="w-5 h-5 text-purple-400" />
@@ -672,7 +676,7 @@ export const BotSelectionScreen: React.FC<BotSelectionScreenProps> = ({
               color === 'w' ? 'bg-slate-100 text-slate-950' : 'text-slate-500'
             }`}
           >
-            ♔ Quân Trắng
+            ♔ {t('whitePieces')}
           </button>
           <button
             type="button"
@@ -681,7 +685,7 @@ export const BotSelectionScreen: React.FC<BotSelectionScreenProps> = ({
               color === 'b' ? 'bg-slate-800 text-white' : 'text-slate-500'
             }`}
           >
-            ♚ Quân Đen
+            ♚ {t('blackPieces')}
           </button>
         </div>
 
@@ -704,7 +708,7 @@ export const BotSelectionScreen: React.FC<BotSelectionScreenProps> = ({
           className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-xs font-bold text-white cursor-pointer"
         >
           <Sparkles className="w-4 h-4" />
-          <span>Đấu với {selectedBot.name}</span>
+          <span>{t('playVsBotBtn')} {selectedBot.name}</span>
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { X, Target, Coins, Check, Loader2, LogIn } from 'lucide-react';
 import { dbApi, type AuthUser, type DailyQuestItem } from '../services/dbApi';
+import { useI18n } from '../i18n/I18nContext';
 
 interface QuestsModalProps {
   open: boolean;
@@ -21,6 +22,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [claimingId, setClaimingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useI18n();
 
   const loadQuests = useCallback(async () => {
     if (!currentUser) return;
@@ -67,9 +69,9 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
               <Target className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-100">Nhiệm Vụ Hằng Ngày</h2>
+              <h2 className="text-sm font-bold text-slate-100">{t('questsTitle')}</h2>
               <p className="text-[11px] text-slate-400">
-                Hoàn thành nhiệm vụ mỗi ngày để nhận thêm Xu mua Skin &amp; Hiệu ứng 3D
+                {t('questsSub')}
               </p>
             </div>
           </div>

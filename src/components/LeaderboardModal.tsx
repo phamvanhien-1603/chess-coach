@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, Trophy, Flame, Loader2, Crown } from 'lucide-react';
 import { dbApi, type AuthUser, type LeaderboardEntry } from '../services/dbApi';
+import { useI18n } from '../i18n/I18nContext';
 
 interface LeaderboardModalProps {
   open: boolean;
@@ -16,6 +17,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     if (!open) return;
@@ -40,9 +42,9 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
               <Trophy className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-100">Bảng Xếp Hạng Kỳ Thủ</h2>
+              <h2 className="text-sm font-bold text-slate-100">{t('leaderboardTitle')}</h2>
               <p className="text-[11px] text-slate-400">
-                Xếp hạng theo Điểm tích lũy, ELO và số trận thắng
+                {t('leaderboardSub')}
               </p>
             </div>
           </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Key, Volume2, VolumeX, Sparkles, Eye, Database, Sun, Moon } from 'lucide-react';
 import type { BoardTheme, PlayerColor, SkillLevelOption } from '../types/chess';
 import { SKILL_LEVELS } from '../utils/chessCoach';
+import { useI18n } from '../i18n/I18nContext';
 
 interface SettingsModalProps {
   open: boolean;
@@ -49,6 +50,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [mongoUriInput, setMongoUriInput] = useState('mongodb://127.0.0.1:27017/chess_coach');
   const [mongoConnecting, setMongoConnecting] = useState(false);
   const [mongoMsg, setMongoMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const { t } = useI18n();
 
   if (!open) return null;
 
@@ -56,7 +58,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
       <div className="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800">
-          <h2 className="text-lg font-bold text-slate-100">Cài đặt &amp; Cấu hình AI</h2>
+          <h2 className="text-lg font-bold text-slate-100">{t('settingsTitle')}</h2>
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition cursor-pointer"
@@ -69,7 +71,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {/* App Appearance: Light / Dark */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-              Giao diện ứng dụng (Sáng / Tối)
+              {t('appearanceLabel')}
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -82,7 +84,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 }`}
               >
                 <Sun className="w-4 h-4 text-amber-400" />
-                <span>Chế độ Sáng</span>
+                <span>{t('lightModeBtn')}</span>
               </button>
               <button
                 type="button"
@@ -94,7 +96,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 }`}
               >
                 <Moon className="w-4 h-4 text-indigo-300" />
-                <span>Chế độ Tối</span>
+                <span>{t('darkModeBtn')}</span>
               </button>
             </div>
           </div>

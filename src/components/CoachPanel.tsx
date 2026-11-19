@@ -326,14 +326,14 @@ export const CoachPanel: React.FC<CoachPanelProps> = ({
             </div>
             <div>
               <div className="text-sm font-extrabold text-slate-900 leading-tight">
-                Xin chào! 👋
+                {t('coachGreeting')}
               </div>
               <p className="text-[11px] font-medium text-slate-600 mt-0.5">
                 {isAiThinking
-                  ? 'AI đang suy nghĩ nước đi...'
+                  ? t('aiThinking')
                   : isAnalyzing
-                    ? 'Stockfish 19 đang tính toán...'
-                    : 'Tôi là AI Coach. Hãy cùng nhau học cờ vua nhé!'}
+                    ? t('analyzing')
+                    : t('coachGreetingSub')}
               </p>
             </div>
           </div>
@@ -351,17 +351,17 @@ export const CoachPanel: React.FC<CoachPanelProps> = ({
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
                 <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                <span>Gợi ý tốt nhất</span>
+                <span>{t('coachBestHintTitle')}</span>
               </div>
               <p className="text-[11px] text-slate-500 mt-0.5">
-                Phương án tối ưu hiện tại theo Stockfish 19 (độ sâu {engineLines[0].depth}).
+                {t('engineDepth')} {engineLines[0].depth} · Stockfish 19
               </p>
             </div>
             <div className="px-3 py-1.5 rounded-xl bg-blue-100/90 border border-blue-200 text-center shrink-0">
               <div className="font-mono text-sm font-extrabold text-blue-800 leading-none">
                 {engineLines[0].pvSan[0]}
               </div>
-              <div className="text-[9px] font-bold text-blue-600 mt-0.5">Tốt nhất</div>
+              <div className="text-[9px] font-bold text-blue-600 mt-0.5">{t('coachBestHintLabel')}</div>
             </div>
           </div>
         )}
@@ -370,7 +370,7 @@ export const CoachPanel: React.FC<CoachPanelProps> = ({
         <div className="rounded-xl bg-emerald-50/80 border border-emerald-200/90 p-3 text-xs sm:text-[13px] text-slate-700 leading-relaxed min-h-[56px]">
           <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 mb-1">
             <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Giải thích nước đi</span>
+            <span>{t('coachExplainTitle')}</span>
           </div>
           {coachHint ? (
             <p className="text-emerald-900 font-medium">{coachHint}</p>
@@ -464,16 +464,16 @@ export const CoachPanel: React.FC<CoachPanelProps> = ({
         <div className="flex items-center justify-between">
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500">
             <Cpu className="w-3.5 h-3.5 text-sky-400" />
-            Phân tích Stockfish 19 (Top 3)
+            {t('engineLinesTitle')}
           </span>
           {engineLines[0] && (
-            <span className="text-[11px] font-mono text-slate-500">Độ sâu {engineLines[0].depth}</span>
+            <span className="text-[11px] font-mono text-slate-500">{t('engineDepth')} {engineLines[0].depth}</span>
           )}
         </div>
 
         <div className="space-y-1.5">
           {engineLines.length === 0 ? (
-            <p className="text-xs text-slate-500 py-2">Đang tính toán các phương án tối ưu...</p>
+            <p className="text-xs text-slate-500 py-2">{t('engineComputing')}</p>
           ) : (
             engineLines.slice(0, 3).map((line, idx) => {
               const evalStr = formatEval(line.scoreCp, line.mate);

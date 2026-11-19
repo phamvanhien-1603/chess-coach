@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, ShoppingBag, Coins, Check, Sparkles, LogIn, Loader2 } from 'lucide-react';
 import { BOARD_SKINS, EFFECT_SKINS, PIECE_SKINS } from '../data/skins';
 import { dbApi, type AuthUser } from '../services/dbApi';
+import { useI18n } from '../i18n/I18nContext';
 
 interface ShopModalProps {
   open: boolean;
@@ -21,6 +22,7 @@ export const ShopModal: React.FC<ShopModalProps> = ({
   const [tab, setTab] = useState<'piece' | 'board' | 'effect'>('piece');
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useI18n();
 
   if (!open) return null;
 
@@ -122,7 +124,7 @@ export const ShopModal: React.FC<ShopModalProps> = ({
                     tab === 'piece' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
-                  Quân Cờ 3D ({PIECE_SKINS.length})
+                  {t('shopPieceTab')} ({PIECE_SKINS.length})
                 </button>
                 <button
                   onClick={() => setTab('board')}
@@ -130,7 +132,7 @@ export const ShopModal: React.FC<ShopModalProps> = ({
                     tab === 'board' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
-                  Bàn Cờ ({BOARD_SKINS.length})
+                  {t('shopBoardTab')} ({BOARD_SKINS.length})
                 </button>
                 <button
                   onClick={() => setTab('effect')}
@@ -138,7 +140,7 @@ export const ShopModal: React.FC<ShopModalProps> = ({
                     tab === 'effect' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
-                  Hiệu ứng Hạ cờ ({EFFECT_SKINS.length})
+                  {t('shopEffectTab')} ({EFFECT_SKINS.length})
                 </button>
               </div>
             </div>
