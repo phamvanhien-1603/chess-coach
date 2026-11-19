@@ -1132,6 +1132,15 @@ wss.on('connection', (ws) => {
   });
 });
 
+// Serve built frontend (dist/) in production when available
+const distDir = path.resolve(__dirname, '../dist');
+if (fs.existsSync(path.join(distDir, 'index.html'))) {
+  app.use(express.static(distDir));
+  app.get(/^(?!\/api|\/ws).*/, (_req, res) => {
+    res.sendFile(path.join(distDir, 'index.html'));
+  });
+}
+
 httpServer.listen(PORT, () => {
   console.log(`🚀 Chess Coach API + WebSocket chạy tại http://localhost:${PORT}`);
   connectMongo(currentUri);
