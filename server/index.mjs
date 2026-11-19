@@ -24,7 +24,10 @@ const PORT = parseInt(process.env.PORT || '3001', 10);
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 
-let currentUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/chess_coach';
+let currentUri =
+  process.env.MONGODB_URI ||
+  process.env.MONGO_URL ||
+  'mongodb://127.0.0.1:27017/chess_coach';
 let lastDbError = null;
 
 async function ensureAdminAccount() {
