@@ -7,6 +7,7 @@ export interface AuthUser {
   username: string;
   email: string;
   displayName: string;
+  country?: string;
   role: 'user' | 'admin';
   elo: number;
   points: number;
@@ -74,6 +75,33 @@ export interface DailyQuestItem {
   rewardCoins: number;
   rewardPoints: number;
   claimed: boolean;
+}
+
+export interface PlayerProfileStats {
+  user: AuthUser;
+  ratings: {
+    classical: number;
+    rapid: number;
+    blitz: number;
+  };
+  record: {
+    totalGames: number;
+    wins: number;
+    draws: number;
+    losses: number;
+    winRate: number;
+    avgOpponent: number;
+    whiteGames: number;
+    whiteWinRate: number;
+    blackGames: number;
+    blackWinRate: number;
+  };
+  topOpenings: {
+    eco: string;
+    name: string;
+    games: number;
+    winRate: number;
+  }[];
 }
 
 export interface AdminOverview {
@@ -248,17 +276,26 @@ export const dbApi = {
     }
   },
 
-  async updateProfile(displayName: string): Promise<AuthUser> {
+  async updateProfile(payload: string | { displayName?: string; country?: string }): Promise<AuthUser> {
+    const body = typeof payload === 'string' ? { displayName: payload } : payload;
     const res = await fetch('/api/auth/profile', {
       method: 'PATCH',
       headers: authHeaders({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({ displayName }),
+      body: JSON.stringify(body),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       throw new Error(data.error || 'Cập nhật thất bại');
     }
     return data.user;
+  },
+
+  async getProfileStats(userId?: string): Promise<PlayerProfileStats> {
+    const q = userId ? `?userId=${encodeURIComponent(userId)}` : '';
+    const res = await fetch(`/api/profile/stats${q}`, { headers: authHeaders() });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Không tải được hồ sơ kỳ thủ');
+    return data;
   },
 
   async getHealth(): Promise<DbHealth> {

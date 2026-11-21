@@ -123,6 +123,7 @@ function sanitizeUser(userDoc) {
     username: userDoc.username,
     email: userDoc.email,
     displayName: userDoc.displayName || userDoc.username,
+    country: userDoc.country || 'Việt Nam',
     role: userDoc.role || 'user',
     elo: userDoc.elo ?? 1200,
     points: userDoc.points ?? 0,
@@ -242,18 +243,130 @@ app.get('/api/auth/me', requireDb, requireAuth, async (req, res) => {
 
 app.patch('/api/auth/profile', requireDb, requireAuth, async (req, res) => {
   try {
-    const { displayName } = req.body || {};
-    const cleanName = String(displayName || '').trim();
-    if (!cleanName || cleanName.length > 40) {
-      return res.status(400).json({ error: 'Tên hiển thị phải từ 1 đến 40 ký tự.' });
+    const { displayName, country } = req.body || {};
+    const updates = {};
+    if (typeof displayName === 'string') {
+      const cleanName = displayName.trim();
+      if (!cleanName || cleanName.length > 40) {
+        return res.status(400).json({ error: 'Tên hiển thị phải từ 1 đến 40 ký tự.' });
+      }
+      updates.displayName = cleanName;
+    }
+    if (typeof country === 'string' && country.trim()) {
+      updates.country = country.trim().slice(0, 40);
     }
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { $set: { displayName: cleanName } },
+      { $set: updates },
       { new: true }
     ).lean();
     if (!user) return res.status(404).json({ error: 'Không tìm thấy tài khoản.' });
     return res.json({ user: sanitizeUser(user) });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+function detectOpeningFromMoves(moves = []) {
+  const sans = moves.slice(0, 6).map((m) => m.san).join(' ');
+  if (sans.startsWith('e4 e5 Nf3 Nc6 Bb5')) return { eco: 'C67', name: 'Ruy Lopez' };
+  if (sans.startsWith('e4 e5 Nf3 Nc6 Bc4 Bc5')) return { eco: 'C50', name: 'Giuoco Pianissimo' };
+  if (sans.startsWith('e4 e5 Nf3 Nc6 Bc4')) return { eco: 'C50', name: 'Italian Game' };
+  if (sans.startsWith('e4 c5')) return { eco: 'B50', name: 'Sicilian Defense' };
+  if (sans.startsWith('e4 e6')) return { eco: 'C00', name: 'French Defense' };
+  if (sans.startsWith('e4 c6')) return { eco: 'B10', name: 'Caro-Kann Defense' };
+  if (sans.startsWith('d4 d5 c4')) return { eco: 'D06', name: "Queen's Gambit" };
+  if (sans.startsWith('d4 Nf6')) return { eco: 'A45', name: 'Indian Defense' };
+  if (sans.startsWith('c4')) return { eco: 'A10', name: 'English Opening' };
+  if (sans.startsWith('e4 e5')) return { eco: 'C20', name: "King's Pawn Game" };
+  return { eco: 'A00', name: 'Irregular Opening' };
+}
+
+app.get('/api/profile/stats', requireDb, optionalAuth, async (req, res) => {
+  try {
+    const targetId = req.query.userId ? String(req.query.userId) : req.user?.id;
+    if (!targetId || !mongoose.Types.ObjectId.isValid(targetId)) {
+      return res.status(400).json({ error: 'Thiếu hoặc sai userId.' });
+    }
+    const uid = new mongoose.Types.ObjectId(targetId);
+    const [user, games] = await Promise.all([
+      User.findById(uid).select('-passwordHash').lean(),
+      Game.find({ userId: uid, mode: 'play' }).select('playerColor winner aiElo moves').lean(),
+    ]);
+    if (!user) return res.status(404).json({ error: 'Không tìm thấy kỳ thủ.' });
+
+    let wins = 0;
+    let draws = 0;
+    let losses = 0;
+    let oppEloSum = 0;
+    let whiteGames = 0;
+    let whiteWins = 0;
+    let blackGames = 0;
+    let blackWins = 0;
+    const openingMap = new Map();
+
+    for (const g of games) {
+      oppEloSum += g.aiElo || 1200;
+      const isWin = g.winner === 'player';
+      const isDraw = g.winner === 'draw';
+      if (isWin) wins++;
+      else if (isDraw) draws++;
+      else if (g.winner === 'ai') losses++;
+
+      if (g.playerColor === 'b') {
+        blackGames++;
+        if (isWin) blackWins++;
+      } else {
+        whiteGames++;
+        if (isWin) whiteWins++;
+      }
+
+      const op = detectOpeningFromMoves(g.moves || []);
+      const cur = openingMap.get(op.eco + op.name) || { eco: op.eco, name: op.name, games: 0, wins: 0 };
+      cur.games++;
+      if (isWin) cur.wins++;
+      openingMap.set(op.eco + op.name, cur);
+    }
+
+    const totalGames = Math.max(games.length, user.gamesPlayed || 0);
+    const finalWins = games.length > 0 ? wins : user.wins || 0;
+    const finalDraws = draws;
+    const finalLosses = Math.max(0, totalGames - finalWins - finalDraws);
+    const winRate = totalGames > 0 ? Number(((finalWins / totalGames) * 100).toFixed(1)) : 0;
+    const avgOpponent = games.length > 0 ? Math.round(oppEloSum / games.length) : 1200;
+
+    const topOpenings = Array.from(openingMap.values())
+      .sort((a, b) => b.games - a.games)
+      .slice(0, 3)
+      .map((o) => ({
+        eco: o.eco,
+        name: o.name,
+        games: o.games,
+        winRate: o.games > 0 ? Math.round((o.wins / o.games) * 100) : 0,
+      }));
+
+    const baseElo = user.elo ?? 1200;
+    return res.json({
+      user: sanitizeUser(user),
+      ratings: {
+        classical: baseElo + 12,
+        rapid: baseElo,
+        blitz: Math.max(400, baseElo - 18),
+      },
+      record: {
+        totalGames,
+        wins: finalWins,
+        draws: finalDraws,
+        losses: finalLosses,
+        winRate,
+        avgOpponent,
+        whiteGames,
+        whiteWinRate: whiteGames > 0 ? Math.round((whiteWins / whiteGames) * 100) : 0,
+        blackGames,
+        blackWinRate: blackGames > 0 ? Math.round((blackWins / blackGames) * 100) : 0,
+      },
+      topOpenings,
+    });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -265,6 +378,7 @@ function formatPublicUser(userDoc) {
     id: String(userDoc._id),
     username: userDoc.username,
     displayName: userDoc.displayName || userDoc.username,
+    country: userDoc.country || 'Việt Nam',
     role: userDoc.role || 'user',
     elo: userDoc.elo ?? 1200,
   };

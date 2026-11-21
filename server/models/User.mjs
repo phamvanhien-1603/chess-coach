@@ -22,6 +22,12 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       maxlength: 40,
     },
+    country: {
+      type: String,
+      trim: true,
+      maxlength: 40,
+      default: 'Việt Nam',
+    },
     passwordHash: {
       type: String,
       required: true,
